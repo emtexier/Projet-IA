@@ -140,13 +140,18 @@ namespace ProjetIA2022
             // Accès à certaines constantes :
             // Form1.tempscaseautoroute  : 10mn par déplacement d'1 case sur autoroute
             //  Form1.tempscasenationale  : 15mn par déplacement d'1 case sur nationale
-           //   Form1.tempscasedepartementale : 20mn pour déplacement sur départementale
-           //   Form1.tempscaserecharge = 30; // 30mn pour passer de 0 à 100 en énergie
+            //   Form1.tempscasedepartementale : 20mn pour déplacement sur départementale
+            //   Form1.tempscaserecharge = 30; // 30mn pour passer de 0 à 100 en énergie
             // et proportionnellement moins si on a déjà de l'énergie
             // Form1.matrice[x,y] indique le type de case : 1 pour départementale, 2 pour nationale
             // 3 pour autoroute et 8 pour recharge ; -1 dans la matrice est une case inaccessible
-    
-            return ( 0 );
+
+            //DISTANCE EUCLIDIENNE
+            /*double distanceX = Form1.xfinal - this.x;
+            double distanceY = Form1.yfinal - this.y;
+            return Math.Sqrt(distanceX * distanceX + distanceY * distanceY) * Form1.tempscasedepartementale;*/
+
+           return 0;
            
         }
 
