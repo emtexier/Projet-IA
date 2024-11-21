@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace ProjetIA2022
 {
-    public class Node2 : GenericNode 
+    public class Node2 : GenericNode
     {
         public int x;
         public int y;
         public double energy;  // énergie restante de la voiture
-                            // entre 0 et 100 ; doit toujours être positif; 
+                               // entre 0 et 100 ; doit toujours être positif; 
 
-      // Méthodes abstraites, donc à surcharger obligatoirement avec override dans une classe fille
-      // version 1, fonctionnelle, mais pas optimale
+        // Méthodes abstraites, donc à surcharger obligatoirement avec override dans une classe fille
+        // version 1, fonctionnelle, mais pas optimale
         public override bool IsEqual(GenericNode N2)
         {
             Node2 N2bis = (Node2)N2;   // N2bis est le potentiel nouveau noeud
@@ -32,8 +32,8 @@ namespace ProjetIA2022
         // de l'autre ; en général, cela n'arrive pas, mais ... solution abandonnée pour
         // plus de sûreté
 
-       // public override bool IsEqual(GenericNode N2)
-       // {
+        // public override bool IsEqual(GenericNode N2)
+        // {
         //    Node2 N2bis = (Node2)N2;   // N2bis est le potentiel nouveau noeud
         //    if ((x == N2bis.x) && (y == N2bis.y))
         //        if (energy >= N2bis.energy)
@@ -50,12 +50,12 @@ namespace ProjetIA2022
             Node2 N2bis = (Node2)N2;     // On "cast" car on sait que c'est un objet de la classe Node2.
 
             if ((N2bis.y == y) && (N2bis.x == x))
-                {
+            {
                 // On est au même endroit, c'est pour refaire le
                 // plein d'énergie, on reste ici un temps proportionnel à la qté
                 // d'énergie manquante
-                return ((100-energy)*Form1.tempscaserecharge/100.0);
-               }
+                return ((100 - energy) * Form1.tempscaserecharge / 100.0);
+            }
             else
             {
                 double cost;
@@ -69,7 +69,7 @@ namespace ProjetIA2022
                     cost = Form1.tempscasenationale;   // cas particulier, on met un coût moyen;
                 else
                     cost = 1000000;   // Ne doit jamais arriver ! Si on arrive là
-                                        // c'est une erreur
+                                      // c'est une erreur
 
                 if ((N2bis.y == y) || (N2bis.x == x))
                     return cost;   // même ligne ou colonne, on se déplace d'1 case
@@ -86,7 +86,7 @@ namespace ProjetIA2022
         {
             List<GenericNode> lsucc = new List<GenericNode>();
 
-            for (int dx=-1; dx <= 1; dx++)
+            for (int dx = -1; dx <= 1; dx++)
             {
                 for (int dy = -1; dy <= 1; dy++)
                 {
@@ -111,7 +111,7 @@ namespace ProjetIA2022
 
             }
             // Dernier cas, on est sur une case recharge !
-            if (Form1.matrice[x,y] == Form1.recharge)
+            if (Form1.matrice[x, y] == Form1.recharge)
                 if (energy < 100)   // Pas totalement chargé
                 {
                     Node2 newnode2 = new Node2();
@@ -149,16 +149,211 @@ namespace ProjetIA2022
             //DISTANCE EUCLIDIENNE
             /*double distanceX = Form1.xfinal - this.x;
             double distanceY = Form1.yfinal - this.y;
-            return Math.Sqrt(distanceX * distanceX + distanceY * distanceY) * Form1.tempscasedepartementale;*/
+            return Math.Sqrt(distanceX * distanceX + distanceY * distanceY) * Form1.tempscasedepartementale;
 
-           return 0;
-           
+            // DISTANCE MANHATTAN
+            double distanceX = Math.Abs(Form1.xfinal - this.x);
+            double distanceY = Math.Abs(Form1.yfinal - this.y);
+            return (distanceX + distanceY) * Form1.tempscasedepartementale;*/
+
+            double distanceXe = Form1.xfinal - this.x;
+            double distanceYe = Form1.yfinal - this.y;
+            double euclienne = Math.Sqrt(distanceXe * distanceXe + distanceYe * distanceYe) * Form1.tempscasedepartementale;
+
+            // DISTANCE MANHATTAN
+            double distanceXm = Math.Abs(Form1.xfinal - this.x);
+            double distanceYm = Math.Abs(Form1.yfinal - this.y);
+            return (distanceXm + distanceYm) * Form1.tempscasedepartementale;
+
+            /*if (euclienne > manhattan)
+                Console.WriteLine("euclienne gagne");
+            else
+                Console.WriteLine("manhattan gagne");
+            return euclienne>manhattan ? manhattan : euclienne;*/
+
+            // Distance Manhattan vers la destination
+            /*double distanceX = Math.Abs(Form1.xfinal - this.x);
+            double distanceY = Math.Abs(Form1.yfinal - this.y);
+            double distanceToDestination = distanceX + distanceY;
+            // Coût Manhattan vers la destination
+            double manhattanCost = distanceToDestination * Form1.tempscasedepartementale;
+            // Énergie requise pour atteindre la destination
+            double energyRequired = GetEnergyRequired(distanceToDestination);
+            // Si l'énergie est suffisante, pas besoin de station de recharge
+            if (this.energy >= energyRequired) { return manhattanCost; }
+            // Sinon, trouver la station de recharge la plus proche
+            double rechargeStationCost = double.MaxValue;
+
+            Form1 newForm = new Form1();
+            foreach (var station in newForm.powerstations)
+            {
+                // Calculer la distance à la station
+                double distanceToStation = Math.Abs(station.X - this.x) + Math.Abs(station.Y - this.y);
+                double distanceFromStationToDestination = Math.Abs(Form1.xfinal - station.X) + Math.Abs(Form1.yfinal - station.Y);
+                // Temps pour aller à la station, recharger, puis aller à la destination
+                double totalCost = (distanceToStation + distanceFromStationToDestination) * Form1.tempscasedepartementale + (100 - this.energy) * Form1.tempscaserecharge / 100;
+                // Garder le coût minimum
+                rechargeStationCost = Math.Min(rechargeStationCost, totalCost);
+            }
+            // Retourner le coût avec recharge incluse
+            return rechargeStationCost;*/
+
+
+
+
+            // Distance Manhattan vers la destination 
+            double distanceX = Math.Abs(Form1.xfinal - this.x);
+            double distanceY = Math.Abs(Form1.yfinal - this.y);
+
+            // Coût pour aller directement à la destination 
+            double manhattanCost = CalculateRouteCost(this.x, this.y, Form1.xfinal, Form1.yfinal);
+
+            // Énergie requise pour atteindre directement la destination 
+            double energyRequired = GetEnergyRequired(this.x, this.y, Form1.xfinal, Form1.yfinal);
+
+            // Si l'énergie actuelle est suffisante pour atteindre la destination 
+            if (this.energy >= energyRequired)
+            {
+                return manhattanCost;
+            }
+
+            // Sinon, chercher la meilleure station de recharge 
+            double rechargeStationCost = double.MaxValue;
+            Form1 newForm = new Form1();
+            foreach (var station in newForm.powerstations)
+            {
+                // Coût pour atteindre la station de recharge 
+                double costToStation = CalculateRouteCost(this.x, this.y, station.X, station.Y);
+
+                // Coût pour aller de la station de recharge à la destination 
+                double costFromStationToDestination = CalculateRouteCost(station.X, station.Y, Form1.xfinal, Form1.yfinal);
+
+                // Énergie requise pour atteindre la station 
+                double energyToStation = GetEnergyRequired(this.x, this.y, station.X, station.Y);
+
+                // Si l'énergie actuelle est insuffisante pour atteindre la station, ignorer cette station 
+                if (this.energy < energyToStation)
+                {
+                    continue;
+                }
+
+                // Coût total (temps de déplacement + recharge) 
+                double totalCost = costToStation + costFromStationToDestination + (100 - this.energy) * Form1.tempscaserecharge / 100;
+
+                // Garder le coût minimal 
+                rechargeStationCost = Math.Min(rechargeStationCost, totalCost);
+            }
+
+            // Retourner le coût minimal (incluant la recharge) 
+            return rechargeStationCost;
         }
+
+
+
+        /*public double GetEnergyRequired(double distance)
+            {
+                // Chaque case de départementale consomme 2% d'énergie (par exemple) 
+                double energyPerCase = 2;
+                // Calculer l'énergie totale requise 
+                return distance * energyPerCase;
+            }*/
+        private double CalculateRouteCost(int startX, int startY, int endX, int endY)
+        {
+            double totalCost = 0;
+
+            // Parcourir le chemin Manhattan 
+            int currentX = startX;
+            int currentY = startY;
+
+            while (currentX != endX || currentY != endY)
+            {
+                // Se déplacer vers la destination 
+                if (currentX < endX)
+                    currentX++;
+                else if (currentX > endX)
+                    currentX--;
+                else if (currentY < endY)
+                    currentY++;
+                else if (currentY > endY)
+                    currentY--;
+
+                // Identifier le type de case 
+                double caseType = Form1.matrice[currentX, currentY];
+
+                switch (caseType)
+                {
+                    case 3: // Autoroute 
+                        totalCost += Form1.tempscaseautoroute;
+                        break;
+                    case 2: // Nationale 
+                        totalCost += Form1.tempscasenationale;
+                        break;
+                    case 1: // Départementale 
+                        totalCost += Form1.tempscasedepartementale;
+                        break;
+                    default: // Inaccessible ou case non définie 
+                        totalCost += double.MaxValue;
+                        break;
+                }
+            }
+
+            return totalCost;
+        }
+
+
+        private double GetEnergyRequired(int startX, int startY, int endX, int endY)
+        {
+            double energyRequired = 0;
+
+            // Parcourir le chemin Manhattan 
+            int currentX = startX;
+            int currentY = startY;
+
+            while (currentX != endX || currentY != endY)
+            {
+                // Se déplacer vers la destination 
+                if (currentX < endX)
+                    currentX++;
+                else if (currentX > endX)
+                    currentX--;
+                else if (currentY < endY)
+                    currentY++;
+                else if (currentY > endY)
+                    currentY--;
+
+                // Identifier le type de case 
+                double caseType = Form1.matrice[currentX, currentY];
+
+                switch (caseType)
+                {
+                    case 3: // Autoroute 
+                        energyRequired += 1; // Exemple : 1% d'énergie par case 
+                        break;
+                    case 2: // Nationale 
+                        energyRequired += 1.5; // Exemple : 1.5% d'énergie par case 
+                        break;
+                    case 1: // Départementale 
+                        energyRequired += 2; // Exemple : 2% d'énergie par case 
+                        break;
+                    default: // Inaccessible ou case non définie 
+                        energyRequired += double.MaxValue;
+                        break;
+                }
+            }
+
+            return energyRequired;
+        }
+
+
+
+
+
 
         public override string ToString()
         {
-            return Convert.ToString(x)+","+ Convert.ToString(y)+","
-                   +Convert.ToString(Math.Round(energy));
+            return Convert.ToString(x) + "," + Convert.ToString(y) + ","
+                   + Convert.ToString(Math.Round(energy));
         }
+
     }
 }
